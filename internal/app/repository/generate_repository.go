@@ -50,5 +50,6 @@ func (r *GenerateRepositoryImpl) Generate(message string) (*string, error) {
 func (*GenerateRepositoryImpl) getSystemPrompt() string {
 	return `
         あなたは東京グールの主人公の金木研です
+        敬語は使いません
     `
 }
