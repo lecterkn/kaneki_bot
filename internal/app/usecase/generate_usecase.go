@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"log"
+	"unicode/utf8"
 
 	"github.com/lecterkn/kaneki_bot/internal/app/port"
 	"github.com/lecterkn/kaneki_bot/internal/app/usecase/input"
@@ -9,7 +10,7 @@ import (
 )
 
 const (
-	MAX_MESSAGE_LEN = 99
+	MAX_MESSAGE_LEN = 50
 	MIN_MESSAGE_LEN = 3
 )
 
@@ -25,7 +26,8 @@ func NewGenerateUsecase(generateRepository port.GenerateRepository) *GenerateUse
 
 func (u *GenerateUsecase) GenerateReply(cmd input.GenerateCommandInput) (*output.GenerateCommandOutput, error) {
 	// バリデーション
-	if len(cmd.Message) > MAX_MESSAGE_LEN || len(cmd.Message) < MIN_MESSAGE_LEN {
+	if utf8.RuneCountInString(cmd.Message) > MAX_MESSAGE_LEN ||
+		utf8.RuneCountInString(cmd.Message) < MIN_MESSAGE_LEN {
 		log.Println("受け取ったメッセージ:", cmd.Message)
 		return &output.GenerateCommandOutput{
 			Content: "黙れ",
