@@ -22,7 +22,11 @@ cp .env.example .env
 GEMINI_API_KEY=<生成したAPIキー>
 ```
 
-### 4. Discordのボットのトークンを設定
+### 4. Discordのボットを作成
+
+[Discord Developer Portal](https://discord.com/developers/applications) からボットを作成し、トークンを取得する
+
+### 5. Discordのボットのトークンを設定
 
 ```
 DISCORD_BOT_TOKEN=<ボットのトークン>
@@ -31,5 +35,9 @@ DISCORD_BOT_TOKEN=<ボットのトークン>
 ## 実行する
 
 ```sh
+# 通常の起動
 go run cmd/main.go
+
+# airを使って起動する場合
+air
 ```
