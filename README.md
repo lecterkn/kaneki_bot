@@ -5,7 +5,7 @@
 - 東京喰種のキャラクター「金木研」のボット。
 - SSレートグール。
 
-![icon](./icon.jpg)
+<img src="./icon.jpg" alt="icon" width="200"/>
 
 ## 使い方
 
