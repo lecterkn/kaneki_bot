@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	MAX_MESSAGE_LEN = 50
+	MAX_MESSAGE_LEN = 100
 	MIN_MESSAGE_LEN = 3
 )
 
