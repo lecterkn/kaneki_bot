@@ -55,7 +55,7 @@ func (h *MessageHandler) Mention(s *discordgo.Session, m *discordgo.MessageCreat
 }
 
 func (h *MessageHandler) removeMention(message string) string {
-	mentionPattern := "<@.+>"
+	mentionPattern := "<@[0-9]+>"
 	re := regexp.MustCompile(mentionPattern)
 	return strings.TrimSpace(re.ReplaceAllString(message, ""))
 }
