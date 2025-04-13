@@ -30,7 +30,7 @@ func (u *GenerateUsecase) GenerateReply(cmd input.GenerateCommandInput) (*output
 		utf8.RuneCountInString(cmd.Message) < MIN_MESSAGE_LEN {
 		log.Println("受け取ったメッセージ:", cmd.Message)
 		return &output.GenerateCommandOutput{
-			Content: "黙れ",
+			Content: "ごちゃごちゃとうるさいよ",
 		}, nil
 	}
 	log.Println("返信対象メッセージ:", cmd.Message)

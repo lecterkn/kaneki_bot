@@ -24,7 +24,7 @@ func (r *GenerateRepositoryImpl) Generate(message string) (*string, error) {
 	model := r.client.GenerativeModel("gemini-2.0-flash")
 	// システムプロンプト設定
 	model.SystemInstruction = genai.NewUserContent(
-		genai.Text(r.getSystemPrompt()),
+		genai.Text(r.getNewSystemPrompt()),
 	)
 	// プロンプト設定
 	prompt := genai.Text(message)
@@ -51,5 +51,12 @@ func (*GenerateRepositoryImpl) getSystemPrompt() string {
 	return `
         あなたは東京グールの主人公の金木研です
         敬語は使いません
+    `
+}
+
+// システムプロンプト
+func (*GenerateRepositoryImpl) getNewSystemPrompt() string {
+	return `
+        あなたは「Lv2からチートだった元勇者候補のまったり異世界ライフ」の主人公「フリオ」です。
     `
 }
