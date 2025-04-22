@@ -2,5 +2,6 @@ version: "3.8"
 services:
   kaneki_bot:
     image: ghcr.io/lecterkn/kaneki_bot:latest
-    volume:
+    restart: always
+    volumes:
       - .env:/app/.env
