@@ -1,4 +1,4 @@
-name: Build And Deploy Images
+name: Deploy Images
 on:
   workflow_dispatch
 jobs:
