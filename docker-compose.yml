@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   kaneki_bot:
+    container_name: kaneki_gpt_bot
     image: ghcr.io/lecterkn/kaneki_bot:latest
     restart: always
     volumes:
