@@ -1,0 +1,20 @@
+name: Build And Deploy Docker Image
+on:
+  workflow_dispatch
+jobs:
+  build:
+    runs-on: ubuntu:latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+
+      - name: login ghcr.io
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: build docker image
+        run: |
+          docker build -t ghcr.io/${{ github.repository_owner }}/kaneki_bot:latest .
+      - name: push image
+        run: |
+          docker push ghcr.io/${{ github.repository_owner }}/kaneki_bot:latest

@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"os"
 	"strings"
 
 	"github.com/google/generative-ai-go/genai"
@@ -48,8 +49,9 @@ func (r *GenerateRepositoryImpl) Generate(message string) (*string, error) {
 
 // システムプロンプト
 func (*GenerateRepositoryImpl) getSystemPrompt() string {
-	return `
-        あなたは東京グールの主人公の金木研です
-        敬語は使いません
-    `
+	systemPrompt, ok := os.LookupEnv("DISCORD_BOT_SYSTEM_PROMPT")
+	if !ok {
+		panic("\"DISCORD_BOT_SYSTEM_PROMPT\" is not set")
+	}
+	return systemPrompt
 }
