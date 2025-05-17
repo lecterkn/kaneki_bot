@@ -2,7 +2,9 @@ package client
 
 import (
 	"context"
+	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/google/generative-ai-go/genai"
 	"google.golang.org/api/option"
@@ -18,4 +20,15 @@ func GetGeminiClient() *genai.Client {
 		panic(err.Error())
 	}
 	return client
+}
+
+func listModels(client *genai.Client) {
+	res := client.ListModels(context.Background())
+	for {
+		info, err := res.Next()
+		if err != nil {
+			break
+		}
+		fmt.Println(info.Name + " | " + strconv.Itoa(int(info.InputTokenLimit)) + ", " + strconv.Itoa(int(info.OutputTokenLimit)))
+	}
 }

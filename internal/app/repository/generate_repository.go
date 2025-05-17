@@ -22,7 +22,7 @@ func NewGenerateRepositoryImpl(client *genai.Client) port.GenerateRepository {
 // メッセージを生成する
 func (r *GenerateRepositoryImpl) Generate(message string) (*string, error) {
 	// モデル設定
-	model := r.client.GenerativeModel("gemini-2.0-flash")
+	model := r.client.GenerativeModel(r.getGeminiModel())
 	// システムプロンプト設定
 	model.SystemInstruction = genai.NewUserContent(
 		genai.Text(r.getSystemPrompt()),
@@ -45,6 +45,15 @@ func (r *GenerateRepositoryImpl) Generate(message string) (*string, error) {
 	}
 	output := strings.Join(responseTexts, "\n")
 	return &output, nil
+}
+
+// モデル指定 (デフォルトはflash 2.0)
+func (*GenerateRepositoryImpl) getGeminiModel() string {
+	model, ok := os.LookupEnv("DISCORD_BOT_GEMINI_MODEL")
+	if !ok {
+		return "gemini-2.0-flash"
+	}
+	return model
 }
 
 // システムプロンプト
