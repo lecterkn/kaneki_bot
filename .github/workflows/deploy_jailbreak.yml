@@ -1,4 +1,4 @@
-name: Build and Deploy Latest Image
+name: Build and Deploy Jailbreak Image
 on:
   workflow_dispatch:
 jobs:
@@ -11,7 +11,7 @@ jobs:
       # イメージをビルド
       - name: build docker image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}:latest .
+          docker build -t ghcr.io/${{ github.repository }}:jailbreak .
       # dockerにログイン
       - name: login ghcr.io
         run: |
@@ -19,4 +19,4 @@ jobs:
       # イメージをプッシュ
       - name: push image
         run: |
-          docker push ghcr.io/${{ github.repository }}:latest
+          docker push ghcr.io/${{ github.repository }}:jailbreak
