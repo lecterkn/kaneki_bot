@@ -30,28 +30,76 @@ func (h *MessageHandler) Mention(s *discordgo.Session, m *discordgo.MessageCreat
 	if err != nil {
 		log.Fatal(err)
 	}
-	for _, mentionedUser := range m.Mentions {
-		// メンションされた場合
-		if mentionedUser.ID == botUser.ID {
-			// 返信メッセージ生成
-			message, err := h.generateUsecase.GenerateReply(
-				input.GenerateCommandInput{
-					Message: h.removeMention(m.Content),
-				},
-			)
-			if err != nil {
-				log.Println(err)
-				return
-			}
-			// 返信
-			_, err = s.ChannelMessageSend(m.ChannelID, message.Content)
-			if err != nil {
-				log.Println(err)
-				return
-			}
+	// メンションされているか確認
+	if !mentioned(m.Mentions, botUser.ID) {
+		return
+	}
+	// リプライ対象メッセージが存在し、オーナーがBOTではない場合
+	if m.ReferencedMessage != nil && !m.ReferencedMessage.Author.Bot && m.ReferencedMessage.Content != "" {
+		// リプライ送信
+		err := h.sendReply(s, m)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	} else {
+		// メッセージ送信
+		err := h.sendMessage(s, m)
+		if err != nil {
+			log.Println(err)
 			return
 		}
 	}
+}
+
+func (h *MessageHandler) sendReply(s *discordgo.Session, m *discordgo.MessageCreate) error {
+	content := h.removeMention(m.ReferencedMessage.Content)
+	log.Println("リプライメッセージ: ", m.Content)
+	// メッセージ生成
+	message, err := h.generateUsecase.GenerateReply(
+		input.GenerateCommandInput{
+			Message: content,
+		},
+	)
+	if err != nil {
+		return err
+	}
+	// 返信
+	_, err = s.ChannelMessageSendReply(m.ChannelID, message.Content, m.MessageReference)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (h *MessageHandler) sendMessage(s *discordgo.Session, m *discordgo.MessageCreate) error {
+	content := h.removeMention(m.Content)
+	log.Println("メッセージ: ", m.Content)
+	// メッセージ生成
+	message, err := h.generateUsecase.GenerateReply(
+		input.GenerateCommandInput{
+			Message: content,
+		},
+	)
+	if err != nil {
+		return err
+	}
+	// 返信
+	_, err = s.ChannelMessageSend(m.ChannelID, message.Content)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func mentioned(mentions []*discordgo.User, targetId string) bool {
+	for _, mentionedUser := range mentions {
+		// メンションされた場合
+		if mentionedUser.ID == targetId {
+			return true
+		}
+	}
+	return false
 }
 
 func (h *MessageHandler) removeMention(message string) string {

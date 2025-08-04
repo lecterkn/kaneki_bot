@@ -40,7 +40,6 @@ func (u *GenerateUsecase) GenerateReply(cmd input.GenerateCommandInput) (*output
 			Content: "黙れ",
 		}, nil
 	}
-	log.Println("返信対象メッセージ:", cmd.Message)
 	// 生成
 	content, err := u.generateRepository.Generate(cmd.Message)
 	if err != nil {
