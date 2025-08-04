@@ -1,4 +1,4 @@
-name: Build and Deploy Latest Image
+name: Build and Deploy Image
 on:
   workflow_dispatch:
 jobs:
