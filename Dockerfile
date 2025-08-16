@@ -1,14 +1,13 @@
-FROM golang:1.24.1
+FROM golang:1.24.1-alpine
 
 WORKDIR /app
 
 COPY go.mod go.sum ./
 
-RUN go mod download
+RUN apk add --no-cache git && go mod download
 
 COPY . ./
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o /go_app ./cmd/main.go
 
-CMD [ "/go_app" ]
-
+CMD ["/go_app"]
