@@ -38,7 +38,7 @@ func main() {
 	}
 	model, ok := os.LookupEnv("DISCORD_BOT_GEMINI_MODEL")
 	if !ok {
-		model = "default(flash 2.0)"
+		model = "default(flash-lite 2.5)"
 	}
 	fmt.Printf("discord bot is started\n running on %s\n", model)
 	select {}
