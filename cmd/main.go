@@ -4,10 +4,15 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/joho/godotenv"
-	"github.com/lecterkn/kaneki_bot/internal/app/di"
+	"github.com/lecterkn/kaneki_bot/internal/app/client"
+	"github.com/lecterkn/kaneki_bot/internal/app/handler"
+	"github.com/lecterkn/kaneki_bot/internal/app/port"
+	"github.com/lecterkn/kaneki_bot/internal/app/repository"
+	"github.com/lecterkn/kaneki_bot/internal/app/usecase"
 )
 
 func main() {
@@ -26,10 +31,18 @@ func main() {
 	if err != nil {
 		panic("failed to initialize discord client")
 	}
-	// ハンドラー取得
-	handlerSet := di.InitializeHandlers()
+	// DI
+	client := client.GetGeminiClient()
+	var generateRepository port.GenerateRepository
+	if strings.ToLower(os.Getenv("DISCORD_BOT_JAILBREAK")) == "true" {
+		generateRepository = repository.NewGenerateJailbreakRepositoryImpl(client)
+	} else {
+		generateRepository = repository.NewGenerateCommonRepositoryImpl(client)
+	}
+	generateUsecase := usecase.NewGenerateUsecase(generateRepository)
+	messageHandler := handler.NewMessageHandler(generateUsecase)
 	// ハンドラー登録
-	discord.AddHandler(handlerSet.MessageHandler.Mention)
+	discord.AddHandler(messageHandler.Mention)
 
 	// 開始
 	err = discord.Open()
@@ -38,7 +51,7 @@ func main() {
 	}
 	model, ok := os.LookupEnv("DISCORD_BOT_GEMINI_MODEL")
 	if !ok {
-		model = "default(flash 2.0)"
+		model = fmt.Sprintf("default(%s)", repository.GEMINI_MODEL_FALLBACK)
 	}
 	fmt.Printf("discord bot is started\n running on %s\n", model)
 	select {}
